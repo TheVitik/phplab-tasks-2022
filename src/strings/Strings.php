@@ -40,9 +40,10 @@ class Strings implements StringsInterface
     public function mirrorMultibyteString(string $input): string
     {
         $chars = mb_str_split($input);
-        var_dump($chars);
         $reversedChars = array_reverse($chars);
-        $chars = array_reverse(explode(' ',implode("",$reversedChars)));
+        $str = implode("",$reversedChars);
+        $reversedChars = explode(' ',$str);
+        $chars = array_reverse($reversedChars);
         return implode(" ",$chars);
     }
 
