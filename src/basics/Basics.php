@@ -6,12 +6,10 @@ use InvalidArgumentException;
 
 class Basics implements BasicsInterface
 {
-
     private const FIRST = 'first';
     private const SECOND = 'second';
     private const THIRD = 'third';
     private const FOURTH = 'fourth';
-
 
     public function __construct(private BasicsValidator $validator){}
 
@@ -22,7 +20,7 @@ class Basics implements BasicsInterface
     {
         $this->validator->isMinutesException($minute);
 
-        return match(true){
+        return match (true) {
             $minute > 45 || $minute == 0 => self::FOURTH,
             $minute > 30 => self::THIRD,
             $minute > 15 => self::SECOND,
