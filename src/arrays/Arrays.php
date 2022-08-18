@@ -25,7 +25,6 @@ class Arrays implements ArraysInterface
     public function getUniqueValue(array $input): int
     {
         if (count($input) == 0) {
-
             return 0;
         }
         $uniqueValues = [];
