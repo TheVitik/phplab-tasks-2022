@@ -25,6 +25,7 @@ class Arrays implements ArraysInterface
     public function getUniqueValue(array $input): int
     {
         if (count($input) == 0) {
+
             return 0;
         }
         $uniqueValues = [];
@@ -52,23 +53,15 @@ class Arrays implements ArraysInterface
      */
     public function groupByTag(array $input): array
     {
-        $tags = [];
-        foreach ($input as $arr) {
-            $tags = array_merge($tags, $arr['tags']);
-        }
-        $tags = array_unique($tags);
         $result = [];
-        foreach ($tags as $tag) {
-            $result[$tag] = [];
-            foreach ($input as $arr) {
-                if (in_array($tag, $arr['tags'])) {
-                    $result[$tag][] = $arr['name'];
-                }
+        foreach ($input as $arr) {
+            foreach ($arr['tags'] as $tag) {
+                $result[$tag][] = $arr['name'];
+                sort($result[$tag]);
             }
-            sort($result[$tag]);
-
         }
         ksort($result);
+
         return $result;
     }
 }
