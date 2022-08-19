@@ -27,12 +27,14 @@ class Arrays implements ArraysInterface
         if (count($input) == 0) {
             return 0;
         }
+
         $uniqueValues = [];
         foreach (array_count_values($input) as $value => $valueCount) {
             if ($valueCount === 1) {
                 $uniqueValues[] = $value;
             }
         }
+
         if (count($uniqueValues) == 0) {
             return 0;
         }
