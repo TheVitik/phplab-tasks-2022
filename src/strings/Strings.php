@@ -6,9 +6,10 @@ class Strings implements StringsInterface
 {
     public function snakeCaseToCamelCase(string $input): string
     {
-        if (!str_contains($input, '_')) {
+        if (! str_contains($input, '_')) {
             return $input;
         }
+
         for ($i = 0; $i < strlen($input); $i++) {
             if ($input[$i] == '_') {
                 $input[$i + 1] = strtoupper($input[$i + 1]);
