@@ -7,7 +7,6 @@ use GuzzleHttp\Client;
 
 class GuzzleAdapter implements TransportInterface
 {
-
     /**
      * @throws Exception
      * @throws \GuzzleHttp\Exception\GuzzleException

@@ -6,7 +6,6 @@ use src\oop\app\src\Models\Movie;
 
 class FilmixParserStrategy implements ParserInterface
 {
-
     /**
      * @return Movie
      */

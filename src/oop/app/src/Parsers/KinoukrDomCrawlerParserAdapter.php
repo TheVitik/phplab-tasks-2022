@@ -7,7 +7,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class KinoukrDomCrawlerParserAdapter implements ParserInterface
 {
-
     /**
      * @return Movie
      */

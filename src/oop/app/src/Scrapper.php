@@ -16,10 +16,7 @@ use src\oop\app\src\Parsers\ParserInterface;
 use src\oop\app\src\Transporters\TransportInterface;
 
 class Scrapper{
-
-
     public function __construct(private TransportInterface $transporter, private ParserInterface $parser){}
-
 
     /**
      * @return Movie

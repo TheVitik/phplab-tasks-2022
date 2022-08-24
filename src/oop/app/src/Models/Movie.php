@@ -8,7 +8,6 @@ class Movie implements MovieInterface
     private string $poster;
     private string $description;
 
-
     public function getTitle(): string
     {
         return $this->title;
