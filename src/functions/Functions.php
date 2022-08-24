@@ -19,6 +19,8 @@
 
 namespace functions;
 
+use InvalidArgumentException;
+
 class Functions
 {
     public function sayHello(): string
@@ -32,12 +34,12 @@ class Functions
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function sayHelloArgumentWrapper(mixed $arg): string
     {
         if (! is_numeric($arg) && ! is_string($arg) && ! is_bool($arg)) {
-            throw new \InvalidArgumentException('Invalid type of the argument');
+            throw new InvalidArgumentException('Invalid type of the argument');
         }
 
         return $this->sayHelloArgument($arg);
@@ -62,14 +64,14 @@ class Functions
      *      'argument_count' => int,
      *      'argument_values' = array
      * ]
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function countArgumentsWrapper(): array
     {
         if (func_num_args() > 0) {
             foreach (func_get_args() as $argument) {
                 if (! is_string($argument)) {
-                    throw new \InvalidArgumentException('String type of arguments required');
+                    throw new InvalidArgumentException('String type of arguments required');
                 }
             }
         }
