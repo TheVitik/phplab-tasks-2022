@@ -21,8 +21,8 @@ class CurlStrategy implements TransportInterface
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 
         $data = curl_exec($curl);
-        if ($data === false) {
-            throw new Exception(curl_error($curl));
+        if (! $data) {
+            throw new Exception(curl_error($curl), curl_getinfo($curl, CURLINFO_HTTP_CODE));
         }
 
         return $data;

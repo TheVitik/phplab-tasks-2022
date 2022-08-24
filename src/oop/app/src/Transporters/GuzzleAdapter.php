@@ -3,20 +3,24 @@
 namespace src\oop\app\src\Transporters;
 
 use Exception;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 class GuzzleAdapter implements TransportInterface
 {
+    public function __construct(private ClientInterface $client)
+    {
+    }
+
     /**
      * @throws Exception
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getContent(string $url): string
     {
-        $client = new Client();
-        $response = $client->request('GET', $url);
+        $response = $this->client->request('GET', $url);
         if ($response->getStatusCode() != 200) {
-            throw new Exception('Request error');
+            throw new Exception('Request error', $response->getStatusCode());
         }
 
         return $response->getBody();

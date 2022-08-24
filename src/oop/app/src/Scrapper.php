@@ -15,19 +15,18 @@ use src\oop\app\src\Models\Movie;
 use src\oop\app\src\Parsers\ParserInterface;
 use src\oop\app\src\Transporters\TransportInterface;
 
-class Scrapper{
-    public function __construct(private TransportInterface $transporter, private ParserInterface $parser){}
+class Scrapper
+{
+    public function __construct(private TransportInterface $transporter, private ParserInterface $parser)
+    {
+    }
 
     /**
-     * @return Movie
+     * @throws Exception
      */
     public function getMovie(string $url): Movie
     {
-        try {
-            $content = $this->transporter->getContent($url);
-        } catch (Exception $e) {
-            die ($e->getMessage());
-        }
+        $content = $this->transporter->getContent($url);
 
         return $this->parser->parseContent($content);
     }
