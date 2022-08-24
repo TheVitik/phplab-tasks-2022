@@ -7,3 +7,31 @@
  * Note: Dont forget to create variables for TransportInterface and ParserInterface objects.
  * Note: Also you can add your methods if needed.
  */
+
+namespace src\oop\app\src;
+
+use Exception;
+use src\oop\app\src\Models\Movie;
+use src\oop\app\src\Parsers\ParserInterface;
+use src\oop\app\src\Transporters\TransportInterface;
+
+class Scrapper{
+
+
+    public function __construct(private TransportInterface $transporter, private ParserInterface $parser){}
+
+
+    /**
+     * @return Movie
+     */
+    public function getMovie(string $url): Movie
+    {
+        try {
+            $content = $this->transporter->getContent($url);
+        } catch (Exception $e) {
+            die ($e->getMessage());
+        }
+
+        return $this->parser->parseContent($content);
+    }
+}

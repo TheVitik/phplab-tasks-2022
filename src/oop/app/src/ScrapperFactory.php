@@ -11,19 +11,15 @@ use Exception;
 class ScrapperFactory
 {
     /**
-     * @param string $domain
      * @return Scrapper
      * @throws Exception
      */
     public function create(string $domain): Scrapper
     {
-        switch ($domain) {
-            case 'filmix':
-                return new Scrapper(new CurlStrategy(), new FilmixParserStrategy());
-            case 'kinoukr':
-                return new Scrapper(new GuzzleAdapter(), new KinoukrDomCrawlerParserAdapter());
-            default:
-                throw new Exception('Resource not found!');
-        }
+        return match ($domain) {
+            'filmix' => new Scrapper(new CurlStrategy(), new FilmixParserStrategy()),
+            'kinoukr' => new Scrapper(new GuzzleAdapter(), new KinoukrDomCrawlerParserAdapter()),
+            default => throw new Exception('Resource not found!'),
+        };
     }
 }
