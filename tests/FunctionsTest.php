@@ -34,22 +34,38 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    public function testSayHelloArgumentWrapper()
+    /**
+     * @dataProvider sayHelloArgumentWrapperDataProvider
+     */
+    public function testNegativeSayHelloArgumentWrapper($input)
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->functions->sayHelloArgumentWrapper([1, 2, 3, 4, 5]);
+        $this->functions->sayHelloArgumentWrapper($input);
+    }
+
+    public function sayHelloArgumentWrapperDataProvider()
+    {
+        return [
+            [[3.6, 5, 3]],
+            [new stdClass()]
+        ];
+    }
+
+    public function testPositiveSayHelloArgumentWrapper()
+    {
+        $this->assertEquals('Hello World', $this->functions->sayHelloArgumentWrapper('World'));
     }
 
     /**
-     * @dataProvider сountArgumentsDataProvider
+     * @dataProvider countArgumentsDataProvider
      */
     public function testCountArguments($expected, ...$input)
     {
         $this->assertEquals($expected, $this->functions->countArguments(...$input));
     }
 
-    public function сountArgumentsDataProvider(): array
+    public function countArgumentsDataProvider(): array
     {
         return [
             [
@@ -76,10 +92,34 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    public function testCountArgumentsWrapper()
+    /**
+     * @dataProvider countArgumentsWrapperDataProvider
+     */
+    public function testNegativeCountArgumentsWrapper($input)
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->functions->countArgumentsWrapper(...[1, 3.6, true]);
+        $this->functions->countArgumentsWrapper($input);
+    }
+
+    public function countArgumentsWrapperDataProvider()
+    {
+        return [
+            [1],
+            [...[3.6, 5, 3]],
+            [...[true, false]],
+            [new stdClass()]
+        ];
+    }
+
+    public function testPositiveCountArgumentsWrapper()
+    {
+        $this->assertEquals(
+            [
+                'argument_count' => 1,
+                'argument_values' => ['Hello'],
+            ],
+            $this->functions->countArguments('Hello')
+        );
     }
 }
