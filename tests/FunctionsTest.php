@@ -119,7 +119,7 @@ class FunctionsTest extends TestCase
                 'argument_count' => 1,
                 'argument_values' => ['Hello'],
             ],
-            $this->functions->countArguments('Hello')
+            $this->functions->countArgumentsWrapper('Hello')
         );
     }
 }

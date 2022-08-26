@@ -76,6 +76,6 @@ class Functions
             }
         }
 
-        return $this->countArguments(func_get_args());
+        return $this->countArguments(...func_get_args());
     }
 }
