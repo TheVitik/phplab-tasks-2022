@@ -3,51 +3,24 @@
  * Connect to DB
  */
 
-/**
- * SELECT the list of unique first letters using https://www.w3resource.com/mysql/string-functions/mysql-left-function.php
- * and https://www.w3resource.com/sql/select-statement/queries-with-distinct.php
- * and set the result to $uniqueFirstLetters variable
- */
-$uniqueFirstLetters = ['A', 'B', 'C'];
+use src\db\Paginator;
+use src\db\ContentGenerator;
+use src\db\UrlGenerator;
 
-// Filtering
-/**
- * Here you need to check $_GET request if it has any filtering
- * and apply filtering by First Airport Name Letter and/or Airport State
- * (see Filtering tasks 1 and 2 below)
- *
- * For filtering by first_letter use LIKE 'A%' in WHERE statement
- * For filtering by state you will need to JOIN states table and check if states.name = A
- * where A - requested filter value
- */
+require_once './pdo_ini.php';
 
-// Sorting
-/**
- * Here you need to check $_GET request if it has sorting key
- * and apply sorting
- * (see Sorting task below)
- *
- * For sorting use ORDER BY A
- * where A - requested filter value
- */
+require_once 'ContentGenerator.php';
+require_once 'UrlGenerator.php';
+require_once 'Paginator.php';
 
-// Pagination
-/**
- * Here you need to check $_GET request if it has pagination key
- * and apply pagination logic
- * (see Pagination task below)
- *
- * For pagination use LIMIT
- * To get the number of all airports matched by filter use COUNT(*) in the SELECT statement with all filters applied
- */
 
-/**
- * Build a SELECT query to DB with all filters / sorting / pagination
- * and set the result to $airports variable
- *
- * For city_name and state_name fields you can use alias https://www.mysqltutorial.org/mysql-alias/
- */
-$airports = [];
+$paginator = new Paginator();
+$contentGenerator = new ContentGenerator($paginator);
+$url = new UrlGenerator();
+
+$uniqueFirstLetters = $contentGenerator->getUniqueFirstLetters();
+
+$airports = $contentGenerator->request($_GET);
 ?>
 <!doctype html>
 <html lang="en">
@@ -78,7 +51,7 @@ $airports = [];
         Filter by first letter:
 
         <?php foreach ($uniqueFirstLetters as $letter): ?>
-            <a href="#"><?= $letter ?></a>
+            <a href="<?= $url->generate('filter', 'filter_by_first_letter', $letter) ?>"><?= $letter ?></a>
         <?php endforeach; ?>
 
         <a href="/" class="float-right">Reset all filters</a>
@@ -97,10 +70,10 @@ $airports = [];
     <table class="table">
         <thead>
         <tr>
-            <th scope="col"><a href="#">Name</a></th>
-            <th scope="col"><a href="#">Code</a></th>
-            <th scope="col"><a href="#">State</a></th>
-            <th scope="col"><a href="#">City</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'name') ?>">Name</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'code') ?>">Code</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'state') ?>">State</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'city') ?>">City</a></th>
             <th scope="col">Address</th>
             <th scope="col">Timezone</th>
         </tr>
@@ -120,7 +93,7 @@ $airports = [];
         <tr>
             <td><?= $airport['name'] ?></td>
             <td><?= $airport['code'] ?></td>
-            <td><a href="#"><?= $airport['state_name'] ?></a></td>
+            <td><a href="<?= $url->generate('filter', 'filter_by_state', $airport['state_name']) ?>"><?= $airport['state_name'] ?></a></td>
             <td><?= $airport['city_name'] ?></td>
             <td><?= $airport['address'] ?></td>
             <td><?= $airport['timezone'] ?></td>
@@ -140,9 +113,20 @@ $airports = [];
     -->
     <nav aria-label="Navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <?php $other = $paginator->pages() > 10 ?>
+            <?php for ($i = 1; $i <= $paginator->pages(); $i++): ?>
+                <li class="page-item <?= ($paginator->page == $i) ? 'active' : '' ?>">
+                    <a class="page-link"
+                       href="<?= $url->generate('paginator', 'page', $i) ?>"><?= $i ?></a>
+                </li>
+                <?php if($other && $i == 5): ?>
+                    <li class="page-item disabled">
+                        <a class="page-link">...</a>
+                    </li>
+                    <?php $i = $paginator->pages() - 5;
+                    $other = false; ?>
+                <?php endif ?>
+            <?php endfor; ?>
         </ul>
     </nav>
 
