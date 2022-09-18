@@ -1,28 +1,20 @@
 <?php
+
+use src\web\Paginator;
+
 require_once './functions.php';
+require_once 'ContentGenerator.php';
+require_once 'UrlGenerator.php';
+require_once 'Paginator.php';
 
-$airports = require './airports.php';
+$airportsData = require './airports.php';
 
-// Filtering
-/**
- * Here you need to check $_GET request if it has any filtering
- * and apply filtering by First Airport Name Letter and/or Airport State
- * (see Filtering tasks 1 and 2 below)
- */
+$paginator = new Paginator();
+$contentGenerator = new \src\web\ContentGenerator($airportsData, $paginator);
+$url = new \src\web\UrlGenerator();
 
-// Sorting
-/**
- * Here you need to check $_GET request if it has sorting key
- * and apply sorting
- * (see Sorting task below)
- */
+$airports = $contentGenerator->request($_GET);
 
-// Pagination
-/**
- * Here you need to check $_GET request if it has pagination key
- * and apply pagination logic
- * (see Pagination task below)
- */
 ?>
 <!doctype html>
 <html lang="en">
@@ -52,8 +44,8 @@ $airports = require './airports.php';
     <div class="alert alert-dark">
         Filter by first letter:
 
-        <?php foreach (getUniqueFirstLetters(require './airports.php') as $letter): ?>
-            <a href="#"><?= $letter ?></a>
+        <?php foreach (getUniqueFirstLetters($airportsData) as $letter): ?>
+            <a href="<?= $url->generate('filter', 'filter_by_first_letter', $letter) ?>"><?= $letter ?></a>
         <?php endforeach; ?>
 
         <a href="/" class="float-right">Reset all filters</a>
@@ -72,10 +64,10 @@ $airports = require './airports.php';
     <table class="table">
         <thead>
         <tr>
-            <th scope="col"><a href="#">Name</a></th>
-            <th scope="col"><a href="#">Code</a></th>
-            <th scope="col"><a href="#">State</a></th>
-            <th scope="col"><a href="#">City</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'name') ?>">Name</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'code') ?>">Code</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'state') ?>">State</a></th>
+            <th scope="col"><a href="<?= $url->generate('sorter', 'sort', 'city') ?>">City</a></th>
             <th scope="col">Address</th>
             <th scope="col">Timezone</th>
         </tr>
@@ -95,7 +87,7 @@ $airports = require './airports.php';
         <tr>
             <td><?= $airport['name'] ?></td>
             <td><?= $airport['code'] ?></td>
-            <td><a href="#"><?= $airport['state'] ?></a></td>
+            <td><a href="<?= $url->generate('filter', 'filter_by_state', $airport['state']) ?>"><?= $airport['state'] ?></a></td>
             <td><?= $airport['city'] ?></td>
             <td><?= $airport['address'] ?></td>
             <td><?= $airport['timezone'] ?></td>
@@ -115,9 +107,20 @@ $airports = require './airports.php';
     -->
     <nav aria-label="Navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <?php $other = $paginator->pages() > 10 ?>
+            <?php for ($i = 1; $i <= $paginator->pages(); $i++): ?>
+                <li class="page-item <?= ($paginator->page == $i) ? 'active' : '' ?>">
+                    <a class="page-link"
+                       href="<?= $url->generate('paginator', 'page', $i) ?>"><?= $i ?></a>
+                </li>
+                <?php if($other && $i == 5): ?>
+                    <li class="page-item disabled">
+                        <a class="page-link">...</a>
+                    </li>
+                 <?php $i = $paginator->pages() - 5;
+                 $other = false; ?>
+                 <?php endif ?>
+            <?php endfor; ?>
         </ul>
     </nav>
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The $airports variable contains array of arrays of airports (see airports.php)
  * What can be put instead of placeholder so that function returns the unique first letter of each airport name
@@ -6,12 +7,20 @@
  *
  * Create a PhpUnit test (GetUniqueFirstLettersTest) which will check this behavior
  *
- * @param  array  $airports
+ * @param array $airports
  * @return string[]
  */
-function getUniqueFirstLetters(array $airports)
+function getUniqueFirstLetters(array $airports): array
 {
-    // put your logic here
+    $letters = [];
+    foreach ($airports as $airport) {
+        $letters[] = $airport['name'][0];
+    }
 
-    return ['A', 'B', 'C'];
+    $arrayUnique = array_unique($letters);
+    sort($arrayUnique);
+
+    return $arrayUnique;
 }
+
+
