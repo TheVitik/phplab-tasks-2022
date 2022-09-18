@@ -2,9 +2,6 @@
 
 namespace src\web;
 
-use Exception;
-use InvalidArgumentException;
-
 class ContentGenerator
 {
     const LETTER_PATTERN = "/[a-zA-Z]/";
@@ -22,7 +19,7 @@ class ContentGenerator
         return $this->getAirports($filters);
     }
 
-    public function validateRequest(array $data): array
+    private function validateRequest(array $data): array
     {
         $filters = [];
 
@@ -47,7 +44,7 @@ class ContentGenerator
         return $filters;
     }
 
-    public function getAirports(array $filters): array
+    private function getAirports(array $filters): array
     {
         $result = $this->airports;
 
