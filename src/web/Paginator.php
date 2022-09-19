@@ -9,9 +9,6 @@ class Paginator
     public int $page = 1;
     private array $data = [];
 
-    /**
-     * Get pages count of result
-     */
     public function getPagesCount(): int
     {
         $fullPages = intdiv(count($this->data), self::AIRPORTS_PER_PAGE);

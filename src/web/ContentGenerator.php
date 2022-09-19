@@ -20,25 +20,33 @@ class ContentGenerator
     {
         $filters = [];
 
-        if (isset($data['filter_by_first_letter'])
+        if (
+            isset($data['filter_by_first_letter'])
             && preg_match(self::LETTER_PATTERN, $data['filter_by_first_letter'])
-            && strlen($data['filter_by_first_letter']) == 1) {
+            && strlen($data['filter_by_first_letter']) == 1
+        ) {
             $filters['filter_by_first_letter'] = $data['filter_by_first_letter'];
         }
 
-        if (isset($data['filter_by_state'])
-            && in_array($data['filter_by_state'], $this->getStates())) {
+        if (
+            isset($data['filter_by_state'])
+            && in_array($data['filter_by_state'], $this->getStates())
+        ) {
             $filters['filter_by_state'] = $data['filter_by_state'];
         }
 
-        if (isset($data['sort'])
-            && in_array($data['sort'], self::SORT_COLUMNS)) {
+        if (
+            isset($data['sort'])
+            && in_array($data['sort'], self::SORT_COLUMNS)
+        ) {
             $filters['sort'] = $data['sort'];
         }
 
-        if (isset($data['page'])
+        if (
+            isset($data['page'])
             && is_int((int)$data['page'])
-            && $data['page'] >= 1) {
+            && $data['page'] >= 1
+        ) {
             $filters['page'] = $data['page'];
         }
 
@@ -80,9 +88,6 @@ class ContentGenerator
         return $this->paginator->getAirports($result, $filters['page'] ?? 1);
     }
 
-    /**
-     * Get array of states
-     */
     private function getStates(): array
     {
         $result = [];

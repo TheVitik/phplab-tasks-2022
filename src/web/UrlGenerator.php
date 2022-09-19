@@ -16,8 +16,7 @@ class UrlGenerator
         $parameters = [];
         if (empty($_GET)) {
             $query .= "?$key=$value";
-        }
-        else {
+        } else {
             $parameters = array_merge($parameters, $_GET);
             $parameters[$key] = $value;
 
