@@ -4,7 +4,12 @@ namespace src\web;
 
 class UrlGenerator
 {
-
+    /**
+     * Generate URL link with filters, sorts and page.
+     * Replace parameter value or append new one
+     *
+     * Returns url with ordered parameters
+     */
     public function generate(string $type, string $key, string $value): string
     {
         $query = '';

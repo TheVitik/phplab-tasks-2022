@@ -22,5 +22,3 @@ function getUniqueFirstLetters(array $airports): array
 
     return $arrayUnique;
 }
-
-

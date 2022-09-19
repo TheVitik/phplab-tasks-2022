@@ -9,14 +9,20 @@ class Paginator
     public int $page = 1;
     private array $data = [];
 
-    public function pages(): int
+    /**
+     * Get pages count of result
+     */
+    public function getPagesCount(): int
     {
         $fullPages = intdiv(count($this->data), self::AIRPORTS_PER_PAGE);
 
         return (count($this->data) % self::AIRPORTS_PER_PAGE > 0) ? $fullPages + 1 : $fullPages;
     }
 
-    public function results(array $data, int $page): array
+    /**
+     * Paginate result array with airports
+     */
+    public function getAirports(array $data, int $page): array
     {
         $this->page = $page;
         $this->data = $data;

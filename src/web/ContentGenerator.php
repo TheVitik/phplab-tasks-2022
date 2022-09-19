@@ -4,39 +4,40 @@ namespace src\web;
 
 class ContentGenerator
 {
-    const LETTER_PATTERN = "/[a-zA-Z]/";
+    private const LETTER_PATTERN = "/[a-zA-Z]/";
 
-    private array $sortNames = ['name', 'code', 'state', 'city'];
+    private const SORT_COLUMNS = ['name', 'code', 'state', 'city'];
 
     public function __construct(private array $airports, private Paginator $paginator)
     {
     }
 
-    public function request(array $data): array
-    {
-        $filters = $this->validateRequest($data);
-
-        return $this->getAirports($filters);
-    }
-
-    private function validateRequest(array $data): array
+    /**
+     * Validate GET parameters and return array with
+     * valid types of filtering, sorting or paginating
+     */
+    private function getFilters(array $data): array
     {
         $filters = [];
 
-        if (isset($data['filter_by_first_letter']) && preg_match(self::LETTER_PATTERN, $data['filter_by_first_letter'])
+        if (isset($data['filter_by_first_letter'])
+            && preg_match(self::LETTER_PATTERN, $data['filter_by_first_letter'])
             && strlen($data['filter_by_first_letter']) == 1) {
             $filters['filter_by_first_letter'] = $data['filter_by_first_letter'];
         }
 
-        if (isset($data['filter_by_state']) && in_array($data['filter_by_state'], $this->getStates())) {
+        if (isset($data['filter_by_state'])
+            && in_array($data['filter_by_state'], $this->getStates())) {
             $filters['filter_by_state'] = $data['filter_by_state'];
         }
 
-        if (isset($data['sort']) && in_array($data['sort'], $this->sortNames)) {
+        if (isset($data['sort'])
+            && in_array($data['sort'], self::SORT_COLUMNS)) {
             $filters['sort'] = $data['sort'];
         }
 
-        if (isset($data['page']) && is_int((int)$data['page'])
+        if (isset($data['page'])
+            && is_int((int)$data['page'])
             && $data['page'] >= 1) {
             $filters['page'] = $data['page'];
         }
@@ -44,8 +45,13 @@ class ContentGenerator
         return $filters;
     }
 
-    private function getAirports(array $filters): array
+    /**
+     * Apply filters and sorting
+     * and return array of airports
+     */
+    public function getAirports(array $data): array
     {
+        $filters = $this->getFilters($data);
         $result = $this->airports;
 
         if (! empty($filters)) {
@@ -71,9 +77,12 @@ class ContentGenerator
             });
         }
 
-        return $this->paginator->results($result, $filters['page'] ?? 1);
+        return $this->paginator->getAirports($result, $filters['page'] ?? 1);
     }
 
+    /**
+     * Get array of states
+     */
     private function getStates(): array
     {
         $result = [];
