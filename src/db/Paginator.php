@@ -15,10 +15,6 @@ class Paginator
 
     }
 
-
-    /**
-     * Get pages count of result
-     */
     public function getPagesCount(): int
     {
         $sql = str_replace(
