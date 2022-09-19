@@ -6,14 +6,14 @@
  *  (make sure, that you do not INSERT the same values to the cities and states i.e. name should be unique i.e. before INSERTing check if record exists)
  */
 
-/** @var \PDO $pdo */
+/** @var PDO $pdo */
 require_once './pdo_ini.php';
 
 foreach (require_once('../web/airports.php') as $item) {
     // Cities
     // To check if city with this name exists in the DB we need to SELECT it first
     $sth = $pdo->prepare('SELECT id FROM cities WHERE name = :name');
-    $sth->setFetchMode(\PDO::FETCH_ASSOC);
+    $sth->setFetchMode(PDO::FETCH_ASSOC);
     $sth->execute(['name' => $item['city']]);
     $city = $sth->fetch();
 
@@ -32,7 +32,7 @@ foreach (require_once('../web/airports.php') as $item) {
     // States
     // To check if state with this name exists in the DB we need to SELECT it first
     $sth = $pdo->prepare('SELECT id FROM states WHERE state = :state');
-    $sth->setFetchMode(\PDO::FETCH_ASSOC);
+    $sth->setFetchMode(PDO::FETCH_ASSOC);
     $sth->execute(['state' => $item['state']]);
     $state = $sth->fetch();
 
@@ -51,7 +51,7 @@ foreach (require_once('../web/airports.php') as $item) {
     // Airports
     // To check if airport with this name exists in the DB we need to SELECT it first
     $sth = $pdo->prepare('SELECT id FROM airports WHERE code = :code');
-    $sth->setFetchMode(\PDO::FETCH_ASSOC);
+    $sth->setFetchMode(PDO::FETCH_ASSOC);
     $sth->execute(['code' => $item['code']]);
     $airport = $sth->fetch();
 

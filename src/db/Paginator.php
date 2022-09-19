@@ -10,15 +10,24 @@ class Paginator
 
     public int $page = 1;
 
-    public function pages(): int
+    public function __construct(private PDO $pdo)
     {
-        global $pdo;
+
+    }
+
+
+    /**
+     * Get pages count of result
+     */
+    public function getPagesCount(): int
+    {
         $sql = str_replace(
-            'airports.name,airports.code,cities.name as city_name,states.state as state_name,airports.address,airports.timezone',
+            'airports.name, airports.code, cities.name as city_name, 
+                states.state as state_name, airports.address, airports.timezone',
             'COUNT(*)',
             $this->sql
         );
-        $result = $pdo->query($sql);
+        $result = $this->pdo->query($sql);
 
         $count = 0;
         if ($result) {
@@ -30,19 +39,20 @@ class Paginator
         return ($count % self::AIRPORTS_PER_PAGE > 0) ? $fullPages + 1 : $fullPages;
     }
 
-    public function results(string $sql, int $page): array
+    /**
+     * Paginate result array with airports
+     */
+    public function getAirports(string $sql, int $page): array
     {
         $this->page = $page;
         $this->sql = $sql;
-
-        global $pdo;
 
         if ($page == 1) {
             $sql .= 'LIMIT 0, ' . self::AIRPORTS_PER_PAGE;
         } else {
             $sql .= 'LIMIT ' . ($page - 1) * self::AIRPORTS_PER_PAGE . ', ' . self::AIRPORTS_PER_PAGE;
         }
-        $result = $pdo->query($sql);
+        $result = $this->pdo->query($sql);
 
         $airports = [];
         while ($airport = $result->fetch(PDO::FETCH_ASSOC)) {

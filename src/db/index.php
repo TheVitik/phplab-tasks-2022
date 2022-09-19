@@ -14,13 +14,13 @@ require_once 'UrlGenerator.php';
 require_once 'Paginator.php';
 
 
-$paginator = new Paginator();
-$contentGenerator = new ContentGenerator($paginator);
+$paginator = new Paginator($pdo);
+$contentGenerator = new ContentGenerator($pdo, $paginator);
 $url = new UrlGenerator();
 
 $uniqueFirstLetters = $contentGenerator->getUniqueFirstLetters();
 
-$airports = $contentGenerator->request($_GET);
+$airports = $contentGenerator->getAirports($_GET);
 ?>
 <!doctype html>
 <html lang="en">
@@ -113,8 +113,8 @@ $airports = $contentGenerator->request($_GET);
     -->
     <nav aria-label="Navigation">
         <ul class="pagination justify-content-center">
-            <?php $other = $paginator->pages() > 10 ?>
-            <?php for ($i = 1; $i <= $paginator->pages(); $i++): ?>
+            <?php $other = $paginator->getPagesCount() > 10 ?>
+            <?php for ($i = 1; $i <= $paginator->getPagesCount(); $i++): ?>
                 <li class="page-item <?= ($paginator->page == $i) ? 'active' : '' ?>">
                     <a class="page-link"
                        href="<?= $url->generate('paginator', 'page', $i) ?>"><?= $i ?></a>
@@ -123,7 +123,7 @@ $airports = $contentGenerator->request($_GET);
                     <li class="page-item disabled">
                         <a class="page-link">...</a>
                     </li>
-                    <?php $i = $paginator->pages() - 5;
+                    <?php $i = $paginator->getPagesCount() - 5;
                     $other = false; ?>
                 <?php endif ?>
             <?php endfor; ?>
